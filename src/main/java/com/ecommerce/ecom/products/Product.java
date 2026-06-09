@@ -1,4 +1,4 @@
-package com.ecommerce.ecom.product;
+package com.ecommerce.ecom.products;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
