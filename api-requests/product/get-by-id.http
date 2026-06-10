@@ -1,1 +1,2 @@
 GET http://localhost:8080/products/1
+Authorization: Bearer {{token}}
