@@ -1,5 +1,7 @@
 package com.ecommerce.ecom.configs;
 
+import com.ecommerce.ecom.security.CustomAccessDeniedHandler;
+import com.ecommerce.ecom.security.CustomAuthenticationEntryPoint;
 import com.ecommerce.ecom.security.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +20,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
+    private final CustomAuthenticationEntryPoint authenticationEntryPoint;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -29,6 +33,12 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest()
                         .authenticated()
+        );
+
+        http.exceptionHandling(
+                ex -> ex
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
         );
 
         return http.build();
