@@ -6,8 +6,10 @@ import com.ecommerce.ecom.users.dtos.UserMapper;
 import com.ecommerce.ecom.users.dtos.UserResponse;
 import com.ecommerce.ecom.users.exceptions.PasswordMismatchException;
 import com.ecommerce.ecom.users.exceptions.UserAlreadyExistsException;
-import com.ecommerce.ecom.users.exceptions.UserDoesNotExistsException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepo userRepo;
+    private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
@@ -33,11 +36,16 @@ public class UserService {
     }
 
     public void loginUser(LoginRequest loginRequest){
-        User u = userRepo.findByEmail(loginRequest.getEmail()).orElseThrow(
-                () -> new UserDoesNotExistsException(loginRequest.getEmail())
-        );
-        if(!passwordEncoder.matches(loginRequest.getPassword(), u.getPassword())){
-            throw new PasswordMismatchException(u.getEmail());
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getEmail(),
+                            loginRequest.getPassword()
+                    )
+            );
+        }
+        catch(AuthenticationException ex){
+            throw new PasswordMismatchException(loginRequest.getEmail());
         }
     }
 }
