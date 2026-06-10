@@ -5,20 +5,24 @@ import com.ecommerce.ecom.products.Product;
 public class ProductMapper {
     public static ProductResponse toResponse(Product product) {
         return ProductResponse.builder()
-                .id(product.getId())
                 .name(product.getName())
+                .id(product.getId())
                 .description(product.getDescription())
                 .price(product.getPrice())
                 .stock(product.getStock())
+                .imgUrl(product.getImgUrl())
+                .active(product.getActive())
                 .build();
     }
 
-    public static Product toProduct(ProductRequest productRequest) {
+    public static Product toProduct(CreateProductRequest productRequest) {
         return Product.builder()
-                .name(productRequest.getName())
-                .description(productRequest.getDescription())
-                .price(productRequest.getPrice())
-                .stock(productRequest.getStock())
+                .name(productRequest.name())
+                .description(productRequest.description())
+                .price(productRequest.price())
+                .stock(productRequest.stock())
+                .imgUrl((productRequest.imgUrl() == null) ? "Default Image URL" : productRequest.imgUrl())
+                .active(true)
                 .build();
     }
 }

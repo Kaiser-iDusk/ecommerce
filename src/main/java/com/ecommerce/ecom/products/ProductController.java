@@ -1,15 +1,16 @@
 package com.ecommerce.ecom.products;
 
-import com.ecommerce.ecom.products.dtos.ProductRequest;
+import com.ecommerce.ecom.products.dtos.CreateProductRequest;
 import com.ecommerce.ecom.products.dtos.ProductResponse;
+import com.ecommerce.ecom.products.dtos.UpdateProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,9 +19,10 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> create(
             @Validated
-            @RequestBody ProductRequest productRequest
+            @RequestBody CreateProductRequest productRequest
     ){
         return ResponseEntity.status(HttpStatus.CREATED).body(productService.create(productRequest));
     }
@@ -38,14 +40,16 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> update(
             @PathVariable Long id,
-            @Validated @RequestBody ProductRequest productRequest
+            @Validated @RequestBody UpdateProductRequest productRequest
     ){
         return ResponseEntity.status(HttpStatus.OK).body(productService.update(id, productRequest));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> delete(
             @PathVariable Long id
     ){

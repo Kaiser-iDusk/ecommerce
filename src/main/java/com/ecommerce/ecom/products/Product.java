@@ -18,11 +18,20 @@ public class Product extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
-    private String description;
+    @Column(length = 2000)
+    private String description = "No description available";
 
+    @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal price;
 
+    @Column(nullable = false)
     private Integer stock;
+
+    private String imgUrl = "default url";
+
+    @Column(nullable = false)
+    private Boolean active = true;
 }

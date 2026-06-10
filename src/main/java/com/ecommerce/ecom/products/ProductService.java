@@ -1,24 +1,19 @@
 package com.ecommerce.ecom.products;
 
-import com.ecommerce.ecom.products.dtos.ProductMapper;
-import com.ecommerce.ecom.products.dtos.ProductRequest;
-import com.ecommerce.ecom.products.dtos.ProductResponse;
+import com.ecommerce.ecom.products.dtos.*;
 import com.ecommerce.ecom.products.exceptions.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepo repo;
 
-    public ProductResponse create(ProductRequest productRequest) {
+    public ProductResponse create(CreateProductRequest productRequest) {
         Product savedProduct = repo.save(ProductMapper.toProduct(productRequest));
         return ProductMapper.toResponse(savedProduct);
     }
@@ -36,14 +31,28 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse update(Long id, ProductRequest newProduct) {
+    public ProductResponse update(Long id, UpdateProductRequest newProduct) {
         Product getProduct = repo.findById(id).orElseThrow(
                 () -> new ProductNotFoundException(id)
         );
-        getProduct.setName(newProduct.getName());
-        getProduct.setDescription(newProduct.getDescription());
-        getProduct.setPrice(newProduct.getPrice());
-        getProduct.setStock(newProduct.getStock());
+        if(newProduct.name() != null) {
+            getProduct.setName(newProduct.name());
+        }
+        if(newProduct.description() != null) {
+            getProduct.setDescription(newProduct.description());
+        }
+        if(newProduct.price() != null){
+            getProduct.setPrice(newProduct.price());
+        }
+        if(newProduct.stock() != null) {
+            getProduct.setStock(newProduct.stock());
+        }
+        if(newProduct.imgUrl() != null){
+            getProduct.setImgUrl(newProduct.imgUrl());
+        }
+        if(newProduct.active() != null){
+            getProduct.setActive(newProduct.active());
+        }
 
         getProduct = repo.save(getProduct);
 
@@ -55,6 +64,7 @@ public class ProductService {
         Product getProduct = repo.findById(id).orElseThrow(
                 () -> new ProductNotFoundException(id)
         );
-        repo.deleteById(id);
+        getProduct.setActive(false);
+        repo.save(getProduct);
     }
 }
