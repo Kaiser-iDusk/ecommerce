@@ -1,5 +1,6 @@
 package com.ecommerce.ecom.users;
 import com.ecommerce.ecom.users.dtos.LoginRequest;
+import com.ecommerce.ecom.users.dtos.LoginResponse;
 import com.ecommerce.ecom.users.dtos.RegisterRequest;
 import com.ecommerce.ecom.users.dtos.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(
+    public ResponseEntity<LoginResponse> loginUser(
             @Validated @RequestBody LoginRequest loginRequest
     ){
-        userService.loginUser(loginRequest);
-        return ResponseEntity.ok("Login successful");
+        return ResponseEntity.status(HttpStatus.OK).body(userService.loginUser(loginRequest));
     }
 }

@@ -1,9 +1,7 @@
 package com.ecommerce.ecom.users;
 
-import com.ecommerce.ecom.users.dtos.LoginRequest;
-import com.ecommerce.ecom.users.dtos.RegisterRequest;
-import com.ecommerce.ecom.users.dtos.UserMapper;
-import com.ecommerce.ecom.users.dtos.UserResponse;
+import com.ecommerce.ecom.jwt.JwtService;
+import com.ecommerce.ecom.users.dtos.*;
 import com.ecommerce.ecom.users.exceptions.PasswordMismatchException;
 import com.ecommerce.ecom.users.exceptions.UserAlreadyExistsException;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +18,7 @@ public class UserService {
     private final UserRepo userRepo;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     @Transactional
     public UserResponse registerUser(RegisterRequest registerRequest) {
@@ -35,7 +34,7 @@ public class UserService {
         return UserMapper.toUserResponse(u);
     }
 
-    public void loginUser(LoginRequest loginRequest){
+    public LoginResponse loginUser(LoginRequest loginRequest){
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -47,5 +46,8 @@ public class UserService {
         catch(AuthenticationException ex){
             throw new PasswordMismatchException(loginRequest.getEmail());
         }
+
+        String token = jwtService.generateToken(loginRequest.getEmail());
+        return new LoginResponse(token);
     }
 }
