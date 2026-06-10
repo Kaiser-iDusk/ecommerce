@@ -1,0 +1,9 @@
+PUT http://localhost:8080/category/3
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "Electronics",
+  "description": "All electronic items."
+}

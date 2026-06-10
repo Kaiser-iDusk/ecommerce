@@ -1,5 +1,8 @@
 package com.ecommerce.ecom.products;
 
+import com.ecommerce.ecom.categories.Category;
+import com.ecommerce.ecom.categories.CategoryRepository;
+import com.ecommerce.ecom.categories.exceptions.InvalidCategoryException;
 import com.ecommerce.ecom.products.dtos.*;
 import com.ecommerce.ecom.products.exceptions.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +15,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductService {
     private final ProductRepo repo;
+    private final CategoryRepository categoryRepo;
 
     public ProductResponse create(CreateProductRequest productRequest) {
-        Product savedProduct = repo.save(ProductMapper.toProduct(productRequest));
-        return ProductMapper.toResponse(savedProduct);
+        Category cat = categoryRepo.findById(productRequest.categoryId()).orElseThrow(
+                () -> new InvalidCategoryException(productRequest.categoryId())
+        );
+        Product product = ProductMapper.toProduct(productRequest);
+        product.setCategory(cat);
+        product = repo.save(product);
+        return ProductMapper.toResponse(product);
     }
 
     public List<ProductResponse> getAll() {
@@ -52,6 +61,12 @@ public class ProductService {
         }
         if(newProduct.active() != null){
             getProduct.setActive(newProduct.active());
+        }
+        if(newProduct.categoryId() != null){
+            Category cat = categoryRepo.findById(newProduct.categoryId()).orElseThrow(
+                    () -> new InvalidCategoryException(newProduct.categoryId())
+            );
+            getProduct.setCategory(cat);
         }
 
         getProduct = repo.save(getProduct);

@@ -8,6 +8,7 @@ public record UpdateProductRequest(
         BigDecimal price,
         Integer stock,
         String imgUrl,
-        Boolean active
+        Boolean active,
+        Long categoryId
 ) {
 }

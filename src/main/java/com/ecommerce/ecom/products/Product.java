@@ -1,8 +1,10 @@
 package com.ecommerce.ecom.products;
 
+import com.ecommerce.ecom.categories.Category;
 import com.ecommerce.ecom.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 
 import java.math.BigDecimal;
 
@@ -34,4 +36,8 @@ public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private Boolean active = true;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 }

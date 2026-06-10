@@ -1,9 +1,6 @@
 package com.ecommerce.ecom.products.dtos;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 
@@ -22,6 +19,9 @@ public record CreateProductRequest(
         @PositiveOrZero
         Integer stock,
 
-        String imgUrl
+        String imgUrl,
+
+        @Positive
+        Long categoryId
 ) {
 }

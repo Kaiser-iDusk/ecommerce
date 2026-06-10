@@ -1,5 +1,6 @@
 package com.ecommerce.ecom.common;
 
+import com.ecommerce.ecom.categories.exceptions.InvalidCategoryException;
 import com.ecommerce.ecom.products.exceptions.ProductNotFoundException;
 import com.ecommerce.ecom.users.exceptions.PasswordMismatchException;
 import com.ecommerce.ecom.users.exceptions.UserAlreadyExistsException;
@@ -19,10 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleProductNotFound(
             ProductNotFoundException ex
     ){
-        Map<String, String> errors= new HashMap<>();
-        errors.put("status", HttpStatus.NOT_FOUND.toString());
-        errors.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+        return Utils.buildException(ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -44,29 +42,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, String>> handleUserAlreadyExists(
             UserAlreadyExistsException ex
     ){
-        Map<String, String> errors= new HashMap<>();
-        errors.put("status", HttpStatus.CONFLICT.toString());
-        errors.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(errors);
+        return Utils.buildException(ex, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(UserDoesNotExistsException.class)
     public ResponseEntity<Map<String, String>> handleUserDoesNotExists(
             UserDoesNotExistsException ex
     ){
-        Map<String, String> errors= new HashMap<>();
-        errors.put("status", HttpStatus.NOT_FOUND.toString());
-        errors.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errors);
+        return Utils.buildException(ex, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(PasswordMismatchException.class)
     public ResponseEntity<Map<String, String>> handlePasswordMismatch(
             PasswordMismatchException ex
     ){
-        Map<String, String> errors= new HashMap<>();
-        errors.put("status", HttpStatus.UNAUTHORIZED.toString());
-        errors.put("message", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errors);
+        return Utils.buildException(ex, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(InvalidCategoryException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCategory(
+            InvalidCategoryException ex
+    ){
+        return Utils.buildException(ex, HttpStatus.NOT_FOUND);
     }
 }
