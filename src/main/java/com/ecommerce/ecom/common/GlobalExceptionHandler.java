@@ -1,5 +1,7 @@
 package com.ecommerce.ecom.common;
 
+import com.ecommerce.ecom.cart.exceptions.CartItemNotFoundException;
+import com.ecommerce.ecom.cart.exceptions.CartNotFoundException;
 import com.ecommerce.ecom.categories.exceptions.InvalidCategoryException;
 import com.ecommerce.ecom.products.exceptions.ProductNotFoundException;
 import com.ecommerce.ecom.users.exceptions.PasswordMismatchException;
@@ -62,6 +64,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCategoryException.class)
     public ResponseEntity<Map<String, String>> handleInvalidCategory(
             InvalidCategoryException ex
+    ){
+        return Utils.buildException(ex, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCategory(
+            CartNotFoundException ex
+    ){
+        return Utils.buildException(ex, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidCategory(
+            CartItemNotFoundException ex
     ){
         return Utils.buildException(ex, HttpStatus.NOT_FOUND);
     }
