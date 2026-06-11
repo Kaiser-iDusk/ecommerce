@@ -3,8 +3,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "name": "iPhone 16",
-  "description": "Apple iPhone 16",
-  "price": 990,
-  "stock": 500
+  "name": "iPhone 17",
+  "description": "Apple iPhone 17",
+  "price": 1099,
+  "stock": 200,
+  "categoryId": 1
 }

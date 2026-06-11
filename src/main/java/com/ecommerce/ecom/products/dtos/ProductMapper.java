@@ -1,6 +1,8 @@
 package com.ecommerce.ecom.products.dtos;
 
+import com.ecommerce.ecom.common.PagedResponse;
 import com.ecommerce.ecom.products.Product;
+import org.springframework.data.domain.Page;
 
 public class ProductMapper {
     public static ProductResponse toResponse(Product product) {
@@ -24,5 +26,16 @@ public class ProductMapper {
                 .imgUrl((productRequest.imgUrl() == null) ? "Default Image URL" : productRequest.imgUrl())
                 .active(true)
                 .build();
+    }
+
+    public static <T> PagedResponse<T> toPagedRespone(Page<T> page){
+        return new PagedResponse<>(
+                page.getContent(),
+                page.getNumber(),
+                page.getSize(),
+                page.getTotalElements(),
+                page.getTotalPages(),
+                page.isLast()
+        );
     }
 }

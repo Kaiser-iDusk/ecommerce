@@ -3,13 +3,16 @@ package com.ecommerce.ecom.products;
 import com.ecommerce.ecom.categories.Category;
 import com.ecommerce.ecom.categories.CategoryRepository;
 import com.ecommerce.ecom.categories.exceptions.InvalidCategoryException;
+import com.ecommerce.ecom.common.PagedResponse;
 import com.ecommerce.ecom.products.dtos.*;
 import com.ecommerce.ecom.products.exceptions.ProductNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,9 +30,22 @@ public class ProductService {
         return ProductMapper.toResponse(product);
     }
 
-    public List<ProductResponse> getAll() {
-        List<Product> allProducts = repo.findAll();
-        return allProducts.stream().map(ProductMapper::toResponse).toList();
+    public PagedResponse<ProductResponse> getAll(ProductSearchRequest search) {
+        Pageable pageable = PageRequest.of(search.page(), search.size());
+        Page<Product> page;
+
+        if(search.keyword() != null && !search.keyword().isBlank()) {
+            page = repo.findByActiveTrueAndNameContainingIgnoreCase(pageable, search.keyword());
+        }
+        else if(search.categoryId() != null){
+            page = repo.findByActiveTrueAndCategory_Id(pageable, search.categoryId());
+        }
+        else {
+            page = repo.findByActiveTrue(pageable);
+        }
+
+        Page<ProductResponse> responsePage = page.map(ProductMapper::toResponse);
+        return ProductMapper.toPagedRespone(responsePage);
     }
 
     public ProductResponse getById(Long id) {

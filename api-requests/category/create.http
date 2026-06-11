@@ -3,6 +3,6 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "name": "Smartphones",
-  "description": "Smartphones and related electronics."
+  "name": "Shoes",
+  "description": "Shoes, socks and related products."
 }

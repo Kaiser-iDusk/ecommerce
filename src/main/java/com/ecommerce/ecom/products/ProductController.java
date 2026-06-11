@@ -1,7 +1,9 @@
 package com.ecommerce.ecom.products;
 
+import com.ecommerce.ecom.common.PagedResponse;
 import com.ecommerce.ecom.products.dtos.CreateProductRequest;
 import com.ecommerce.ecom.products.dtos.ProductResponse;
+import com.ecommerce.ecom.products.dtos.ProductSearchRequest;
 import com.ecommerce.ecom.products.dtos.UpdateProductRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,8 +30,21 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponse>> getAll() {
-        return ResponseEntity.status(HttpStatus.FOUND).body(productService.getAll());
+    public PagedResponse<ProductResponse> getAll(
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "10") Integer size
+    ) {
+        ProductSearchRequest search = ProductSearchRequest.builder()
+                .keyword(keyword)
+                .categoryId(categoryId)
+                .page(page)
+                .size(size)
+                .sortBy("name")
+                .direction("asc")
+                .build();
+        return productService.getAll(search);
     }
 
     @GetMapping("/{id}")
