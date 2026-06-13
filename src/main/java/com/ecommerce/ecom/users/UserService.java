@@ -1,5 +1,7 @@
 package com.ecommerce.ecom.users;
 
+import com.ecommerce.ecom.cart.Cart;
+import com.ecommerce.ecom.cart.CartRepo;
 import com.ecommerce.ecom.jwt.JwtService;
 import com.ecommerce.ecom.users.dtos.*;
 import com.ecommerce.ecom.users.exceptions.PasswordMismatchException;
@@ -18,6 +20,7 @@ public class UserService {
     private final UserRepo userRepo;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final CartRepo cartRepo;
     private final JwtService jwtService;
 
     @Transactional
@@ -30,6 +33,7 @@ public class UserService {
         u.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
 
         u = userRepo.save(u);
+        cartRepo.save(Cart.builder().user(u).build());
 
         return UserMapper.toUserResponse(u);
     }

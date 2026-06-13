@@ -1,1 +1,1 @@
-GET http://localhost:8080/products?keyword=iPHonE
+GET http://localhost:8080/products

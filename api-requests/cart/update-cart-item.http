@@ -1,0 +1,7 @@
+PUT http://localhost:8080/cart/items/3
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "quantity": 0
+}

@@ -3,9 +3,9 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "name": "iPhone 17",
-  "description": "Apple iPhone 17",
-  "price": 1099,
-  "stock": 200,
-  "categoryId": 1
+  "name": "Sony Bravia X3",
+  "description": "Sony TV",
+  "price": 1699,
+  "stock": 50,
+  "categoryId": 2
 }
